@@ -57,6 +57,9 @@
 .product-list-box .product-item img {
     max-width: 100%;
 }
+.product-img{
+    height: 400px;
+}
 
 .product-list-box .product-item .product-name {
     font-size: 1.5rem;
