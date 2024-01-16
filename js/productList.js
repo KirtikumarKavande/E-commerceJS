@@ -2,9 +2,7 @@ console.log("loading ProductList");
 const clearFilter = document.getElementById("clear");
 
 document.addEventListener("DOMContentLoaded", async () => {
-
-    
-async function fetchCategories() {
+  async function fetchCategories() {
     const res = await fetch("https://fakestoreapi.com/products/categories");
     return await res.json();
   }
@@ -43,7 +41,7 @@ async function fetchCategories() {
       const priceDiv = document.createElement("div");
       const imgTag = document.createElement("img");
 
-      productLink.href = "productDetails.html";
+      productLink.href = `productDetails.html?id=${item.id}`;
       productLink.target = "_blank";
       productLink.classList.add(
         "product-item",
@@ -89,14 +87,14 @@ async function fetchCategories() {
     location.reload();
   });
 
-  let categories=await fetchCategories()
-  categories.forEach((category)=>{
-    let categoryList=document.getElementById('categoryList')
-  const linkForCategory=document.createElement('a')
-  linkForCategory.href=`productList.html?category=${category}`
-  linkForCategory.classList.add("d-flex", "text-decoration-none")
-  linkForCategory.textContent=category
+  let categories = await fetchCategories();
+  categories.forEach((category) => {
+    let categoryList = document.getElementById("categoryList");
+    const linkForCategory = document.createElement("a");
+    linkForCategory.href = `productList.html?category=${category}`;
+    linkForCategory.classList.add("d-flex", "text-decoration-none");
+    linkForCategory.textContent = category;
 
-  categoryList.appendChild(linkForCategory)
-  })
+    categoryList.appendChild(linkForCategory);
+  });
 });
