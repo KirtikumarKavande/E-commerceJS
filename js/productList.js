@@ -1,8 +1,10 @@
 console.log("loading ProductList");
 const clearFilter = document.getElementById("clear");
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async() => {
   const searchButton = document.getElementById("search");
+  const allProduct = await fetchProduct();
+
   async function fetchProduct() {
     const res = await axios("https://fakestoreapi.com/products");
     return res.data;
@@ -11,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function populateProduct(flag, filteredData) {
     var product;
     if (!flag) {
-      product = await fetchProduct();
+      product = allProduct
     } else {
       product = filteredData;
     }
@@ -40,7 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
       priceDiv.classList.add("product-price", "text-center");
 
       nameDiv.textContent = item.title.substring(0, 15) + "...";
-      priceDiv.textContent = `&#8377; ${item.price}`;
+      priceDiv.textContent = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+      }).format(item.price);
 
       productLink.appendChild(imageDiv);
       productLink.appendChild(nameDiv);
@@ -55,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const minPrice = document.getElementById("minPrice");
     const maxPrice = document.getElementById("maxPrice");
-    const allProduct = await fetchProduct();
     const filteredProduct = allProduct.filter(
       (item) =>
         item.price > Number(minPrice.value) &&
