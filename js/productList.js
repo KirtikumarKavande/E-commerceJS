@@ -1,12 +1,20 @@
 console.log("loading ProductList");
+const clearFilter = document.getElementById("clear");
+
 document.addEventListener("DOMContentLoaded", () => {
+  const searchButton = document.getElementById("search");
   async function fetchProduct() {
     const res = await axios("https://fakestoreapi.com/products");
     return res.data;
   }
 
-  async function populateProduct() {
-    const product = await fetchProduct();
+  async function populateProduct(flag, filteredData) {
+    var product;
+    if (!flag) {
+      product = await fetchProduct();
+    } else {
+      product = filteredData;
+    }
     product.forEach(function (item) {
       const productListItem = document.getElementById("productListItem");
 
@@ -31,8 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
       nameDiv.classList.add("product-name", "text-center");
       priceDiv.classList.add("product-price", "text-center");
 
-      nameDiv.textContent=item.title.substring(0,15)+"..."
-      priceDiv.textContent=`&#8377; ${item.price}`
+      nameDiv.textContent = item.title.substring(0, 15) + "...";
+      priceDiv.textContent = `&#8377; ${item.price}`;
 
       productLink.appendChild(imageDiv);
       productLink.appendChild(nameDiv);
@@ -41,5 +49,22 @@ document.addEventListener("DOMContentLoaded", () => {
       productListItem.appendChild(productLink);
     });
   }
-  populateProduct();
+  populateProduct(false);
+  searchButton.addEventListener("click", async (e) => {
+    const productListItem = document.getElementById("productListItem");
+
+    const minPrice = document.getElementById("minPrice");
+    const maxPrice = document.getElementById("maxPrice");
+    const allProduct = await fetchProduct();
+    const filteredProduct = allProduct.filter(
+      (item) =>
+        item.price > Number(minPrice.value) &&
+        item.price < Number(maxPrice.value)
+    );
+    productListItem.innerHTML = "";
+    populateProduct(true, filteredProduct);
+  });
+  clearFilter.addEventListener('click',(ele) => {
+    location.reload();
+  });
 });
